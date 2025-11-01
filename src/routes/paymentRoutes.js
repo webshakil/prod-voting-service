@@ -9,8 +9,8 @@ const router = express.Router();
 // Create payment intent
 router.post(
   '/election/:electionId/create-intent',
-  extractUserData,
-  requireAuth,
+  //extractUserData,
+  //requireAuth,
   [param('electionId').isInt(), validate],
   paymentController.createPaymentIntent
 );
