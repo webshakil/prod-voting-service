@@ -313,18 +313,25 @@ export const getUserVote = async (userId, electionId) => {
 /**
  * Get user's voting history
  */
+/**
+ * Get user's voting history
+ */
 export const getUserVotingHistory = async (userId, page = 1, limit = 10) => {
   try {
     const offset = (page - 1) * limit;
     
-    // 🔥 FIX: Get total count - DON'T destructure
+    console.log(`🔍 Getting voting history for user: ${userId}`);
+    
+    // Get total count
     const countResult = await pool.query(
       'SELECT COUNT(*) as total FROM votteryy_votes WHERE user_id = $1 AND status = $2',
       [String(userId), 'valid']
     );
     const total = parseInt(countResult.rows[0].total);
     
-    // 🔥 FIX: Get votes with receipts and lottery info - DON'T destructure
+    console.log(`📊 Found ${total} total votes for user ${userId}`);
+    
+    // Get votes with receipts and lottery info
     const result = await pool.query(
       `SELECT 
         v.*,
@@ -341,7 +348,7 @@ export const getUserVotingHistory = async (userId, page = 1, limit = 10) => {
       [String(userId), 'valid', limit, offset]
     );
     
-    console.log(`✅ Found ${result.rows.length} votes for user ${userId}`);
+    console.log(`✅ Found ${result.rows.length} votes for user ${userId} on page ${page}`);
     
     // Get election titles from election service
     const votesWithTitles = await Promise.all(
@@ -381,6 +388,74 @@ export const getUserVotingHistory = async (userId, page = 1, limit = 10) => {
     throw error;
   }
 };
+// export const getUserVotingHistory = async (userId, page = 1, limit = 10) => {
+//   try {
+//     const offset = (page - 1) * limit;
+    
+//     // 🔥 FIX: Get total count - DON'T destructure
+//     const countResult = await pool.query(
+//       'SELECT COUNT(*) as total FROM votteryy_votes WHERE user_id = $1 AND status = $2',
+//       [String(userId), 'valid']
+//     );
+//     const total = parseInt(countResult.rows[0].total);
+    
+//     // 🔥 FIX: Get votes with receipts and lottery info - DON'T destructure
+//     const result = await pool.query(
+//       `SELECT 
+//         v.*,
+//         r.receipt_id,
+//         r.verification_code,
+//         l.ticket_number as lottery_ticket_number,
+//         l.ball_number
+//        FROM votteryy_votes v
+//        LEFT JOIN votteryy_vote_receipts r ON v.voting_id = r.voting_id
+//        LEFT JOIN votteryy_lottery_tickets l ON v.voting_id = l.voting_id
+//        WHERE v.user_id = $1 AND v.status = $2
+//        ORDER BY v.created_at DESC
+//        LIMIT $3 OFFSET $4`,
+//       [String(userId), 'valid', limit, offset]
+//     );
+    
+//     console.log(`✅ Found ${result.rows.length} votes for user ${userId}`);
+    
+//     // Get election titles from election service
+//     const votesWithTitles = await Promise.all(
+//       result.rows.map(async (vote) => {
+//         try {
+//           const electionData = await getElectionData(vote.election_id);
+//           return {
+//             ...vote,
+//             election_title: electionData.title,
+//             election_status: electionData.status,
+//           };
+//         } catch (error) {
+//           console.error(`Error fetching election ${vote.election_id}:`, error.message);
+//           return {
+//             ...vote,
+//             election_title: `Election #${vote.election_id}`,
+//             election_status: 'unknown',
+//           };
+//         }
+//       })
+//     );
+    
+//     return {
+//       votes: votesWithTitles,
+//       pagination: {
+//         total,
+//         page,
+//         limit,
+//         totalPages: Math.ceil(total / limit),
+//         currentPage: page,
+//         hasNextPage: page < Math.ceil(total / limit),
+//         hasPrevPage: page > 1,
+//       }
+//     };
+//   } catch (error) {
+//     console.error('❌ Error getting voting history:', error);
+//     throw error;
+//   }
+// };
 
 /**
  * Verify vote receipt

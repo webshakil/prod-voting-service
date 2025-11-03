@@ -1,5 +1,5 @@
 import express from 'express';
-import { body, param } from 'express-validator';
+import { body, param,query } from 'express-validator';
 import { extractUserData, requireAuth } from '../middleware/auth.js';
 import { validate } from '../middleware/validation.js';
 import * as voteController from '../controllers/voteController.js';
@@ -64,6 +64,36 @@ router.get(
   voteController.getElectionResults
 );
 
+//new routes for audit trail
+router.get(
+  '/audit-trail',
+  [
+    query('page').optional().isInt({ min: 1 }),
+    query('limit').optional().isInt({ min: 1, max: 100 }),
+    query('actionType').optional().isString(),
+    query('electionId').optional().isInt(),
+    validate
+  ],
+  voteController.getAuditTrail
+);
+
+// Get audit statistics
+router.get(
+  '/audit-stats',
+  voteController.getAuditStats
+);
+
+// Get hash chain for election (blockchain-style verification)
+router.get(
+  '/hash-chain/:electionId',
+  [param('electionId').isInt(), validate],
+  voteController.getHashChain
+);
+router.get(
+  '/public-bulletin/:electionId',
+  [param('electionId').isInt(), validate],
+  voteController.getPublicBulletinBoard
+);
 export default router;
 // import express from 'express';
 // import { body, param } from 'express-validator';
