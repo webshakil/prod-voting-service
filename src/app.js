@@ -13,7 +13,7 @@ import videoRoutes from './routes/videoRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
 
 const app = express();
-const PORT = process.env.PORT || 5004;
+const PORT = process.env.PORT || 3004;
 
 // ✅ Define allowed frontend origins
 const allowedOrigins = [

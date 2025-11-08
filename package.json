@@ -1,7 +1,7 @@
 {
   "name": "voting-service",
   "version": "1.0.0",
-  "description": "Vottery Voting Service - Handles voting, payments, wallet, and lottery features",
+  "description": "Vottery Voting Service - Handles voting, payments, wallet, and gamefication features",
   "main": "src/server.js",
   "type": "module",
   "scripts": {
