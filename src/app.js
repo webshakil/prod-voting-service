@@ -145,6 +145,7 @@ app.use('/api/lottery', lotteryRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/video', videoRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/voting', voteRoutes);
 
 
 // ✅ 404 handler - must be after all routes
