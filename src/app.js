@@ -11,6 +11,8 @@ import lotteryRoutes from './routes/lotteryRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import videoRoutes from './routes/videoRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
+import votingRoutes from './routes/votingRoutes.js';
+
 
 const app = express();
 const PORT = process.env.PORT || 3004;
@@ -143,6 +145,7 @@ app.use('/api/lottery', lotteryRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/video', videoRoutes);
 app.use('/api/analytics', analyticsRoutes);
+ app.use('/api/voting', votingRoutes);
 
 // ✅ 404 handler - must be after all routes
 app.use((req, res) => {
